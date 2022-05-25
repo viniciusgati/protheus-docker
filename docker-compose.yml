@@ -32,7 +32,7 @@ services:
       - DB_PORT=1433
       - DB_USER=sa
       - DB_PASS=Asdwasdw22!
-      - DB_NAME=PROTHEUS
+      - DB_NAME=protheus_33
     depends_on: 
       - database
       - license
@@ -42,10 +42,10 @@ services:
     container_name: protheus_appserver
     ports:
       - 9999:9999
-      - 8080:8080
+      - 5433:5433
     environment:
       - DBACCESS_SERVER=protheus_dbaccess
-      - DBACCESS_ALIAS=PROTHEUS
+      - DBACCESS_ALIAS=PROTHEUS_33
     volumes:
       - ./docker/protheus12/protheus/apo:/totvs12/protheus/apo
       - ./docker/protheus12/protheus_data:/totvs12/protheus_data

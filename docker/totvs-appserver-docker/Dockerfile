@@ -30,7 +30,7 @@ RUN chmod 777 /totvs12/protheus/bin/appserver/*.so
 RUN cp /build/appserver.ini /totvs12/protheus/bin/appserver/appserver.ini
 
 EXPOSE 9999
-EXPOSE 8080
+EXPOSE 5433
 
 VOLUME ["/totvs12/protheus_data", "/totvs12/protheus/apo"]
 
