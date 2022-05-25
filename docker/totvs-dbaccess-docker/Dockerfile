@@ -1,6 +1,6 @@
 FROM centos:7
 
-LABEL maintainer "Daniel Albuquerque <daniel.alb.querque@gmail.com>"
+LABEL maintainer "Vinicius Gati <viniciusgati@gmail.com>"
 
 RUN curl https://packages.microsoft.com/config/rhel/7/prod.repo > /etc/yum.repos.d/mssql-release.repo \
     && yum -y update \
@@ -21,7 +21,11 @@ ADD 22-03-07-TOTVS_DBACCESS_BUILD_21.1.1.1_LINUX_X64.TAR.GZ /opt/totvs/dbaccess6
 
 COPY /build /build
 
-RUN /build/setup.sh
+RUN sh /build/setup.sh
+
+RUN cat /build/my-init.sh | sed 's/\r//' > /build/clean-my-init.sh
+
+RUN chmod +x /build/clean-my-init.sh
 
 EXPOSE 7890
 
@@ -29,4 +33,4 @@ WORKDIR /opt/totvs/dbaccess64/multi
 
 ENTRYPOINT [ "/usr/bin/dumb-init", "--" ]
 
-CMD [ "/usr/local/bin/my-init.sh", "dbaccess" ]
+CMD [ "sh", "/build/clean-my-init.sh", "dbaccess" ]

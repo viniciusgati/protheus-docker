@@ -7,50 +7,51 @@ services:
     command: /bin/bash ./entrypoint.sh
     container_name: protheus_mssql
     environment:
-      SA_PASSWORD: ${DB_PASS}
+      SA_PASSWORD: Asdwasdw22!
       ACCEPT_EULA: "Y"
-      MSSQL_DB: ${DB_NAME}
+      MSSQL_DB: PROTHEUS_33
     volumes:
       - ./docker/mssql/entrypoint.sh:/entrypoint.sh
       - ./docker/mssql/dbinit.sh:/dbinit.sh
       - ./docker/mssql/dbinit.sql:/dbinit.sql
-    ports: 
-      - ${DB_PORT}:1433
+    ports:
+      - 1433:1433
 
   license:
     image: danielolalb/totvs_protheus_ls
     container_name: protheus_license
     
   dbaccess:
-    build: ./docker/totvs-dbaccess-docker
+    image: viniciusgati/dbaccess_21_1_1_1:latest
     container_name: protheus_dbaccess
     ports:
       - 7890:7890
     environment:
-      - DB_TYPE=${DB_TYPE}
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_USER=${DB_USER}
-      - DB_PASS=${DB_PASS}
-      - DB_NAME=${DB_NAME}
+      - DB_TYPE=mssql
+      - DB_HOST=protheus_mssql
+      - DB_PORT=1433
+      - DB_USER=sa
+      - DB_PASS=Asdwasdw22!
+      - DB_NAME=PROTHEUS
     depends_on: 
       - database
       - license
 
   appserver:
-    build: ./docker/totvs-appserver-docker
+    image: viniciusgati/appserver_20_3_0_8
     container_name: protheus_appserver
     ports:
       - 9999:9999
       - 8080:8080
     user: root
     environment:
-      - DBACCESS_SERVER=${DBACCESS_SERVER}
-      - DBACCESS_ALIAS=${DBACCESS_ALIAS}
-      - DBACCESS_PORT=${DBACCESS_PORT}
+      - DBACCESS_SERVER=protheus_dbaccess
+      - DBACCESS_ALIAS=PROTHEUS
+      - DBACCESS_PORT=7890
     volumes:
-      - ${PROTHEUS_DATA_PATH}:/totvs12/protheus_data
-      - ${PROTHEUS_APO_PATH}:/totvs12/protheus/apo
+      - ./docker/protheus12/protheus_data:/totvs12/protheus_data
+      - ./docker/protheus12/protheus/apo:/totvs12/protheus/apo
+      - ./docker/protheus12/build:/build
     depends_on: 
       - dbaccess
       - license

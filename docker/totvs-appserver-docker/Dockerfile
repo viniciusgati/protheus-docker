@@ -1,10 +1,11 @@
 FROM centos:7
 
-LABEL maintainer "Daniel Albuquerque <daniel.alb.querque@gmail.com>"
+LABEL maintainer "Vinicius Gati <viniciusgati@gmail.com>"
 
 RUN yum -y update \
     && yum -y install \
         dmidecode \
+        netcat \
         fontconfig \
         glib2 \
         glibc \
@@ -19,18 +20,22 @@ RUN DUMB_INIT_SHA256="37f2c1f0372a45554f1b89924fbb134fc24c3756efaedf11e07f599494
     && echo "37f2c1f0372a45554f1b89924fbb134fc24c3756efaedf11e07f599494e0eff9 */usr/bin/dumb-init" | sha256sum -c - \
     && chmod +x /usr/bin/dumb-init
 
-COPY /build /build
-
 ADD 22-03-15-P12_APPSERVER_BUILD-20.3.0.8_LINUX_X64.TAR.GZ /totvs12/protheus/bin/appserver
 
-RUN /build/setup.sh
+COPY /build /build
+RUN cat /build/my-init.sh | sed 's/\r//' > /build/clean-my-init.sh
+RUN chmod +x /build/clean-my-init.sh
+RUN mkdir -p /totvs12/protheus/apo
+RUN chmod 777 /totvs12/protheus/bin/appserver/*.so
+RUN cp /build/appserver.ini /totvs12/protheus/bin/appserver/appserver.ini
 
 EXPOSE 9999
+EXPOSE 8080
 
-VOLUME ["/totvs12/protheus_data", "/totvs12/protheus/apo/"]
-
+VOLUME ["/totvs12/protheus_data", "/totvs12/protheus/apo/", "/build"]
+# RUN sh /build/clean-my-init.sh
 WORKDIR /totvs12/protheus/bin/appserver
 
 ENTRYPOINT [ "/usr/bin/dumb-init", "--" ]
 
-CMD [ "/usr/local/bin/my-init.sh" ]
+CMD [ "/build/clean-my-init.sh" ]

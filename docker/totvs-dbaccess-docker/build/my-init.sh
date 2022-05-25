@@ -1,6 +1,4 @@
 #!/bin/bash
-set -e
-
 if [ ! -z ${DATABASE_URL+x} ]; then
   pattern='^(postgres|mssql):\/\/([^:]+):([^@]+)@([^:]+):([^\/]\d+)\/(.+)'
 
@@ -36,7 +34,7 @@ if [ "$1" = 'dbaccess' ]; then
   until echo -n > /dev/tcp/${DB_HOST}/${DB_PORT}
   do
       echo "INFO Esperando serviço de banco de dados..."
-      sleep 0.5
+      sleep 2
   done
 
   echo "INFO Conectado ao serviço de banco de dados."
