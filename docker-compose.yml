@@ -14,6 +14,7 @@ services:
       - ./docker/mssql/entrypoint.sh:/entrypoint.sh
       - ./docker/mssql/dbinit.sh:/dbinit.sh
       - ./docker/mssql/dbinit.sql:/dbinit.sql
+      - ./docker/mssql/P12133MNTDBEXP.bak:/P12133MNTDBEXP.bak
     ports:
       - 1433:1433
 
