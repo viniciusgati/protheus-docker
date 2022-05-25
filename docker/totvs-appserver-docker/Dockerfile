@@ -5,7 +5,7 @@ LABEL maintainer "Vinicius Gati <viniciusgati@gmail.com>"
 RUN yum -y update \
     && yum -y install \
         dmidecode \
-        netcat \
+        nc \
         fontconfig \
         glib2 \
         glibc \
@@ -32,8 +32,8 @@ RUN cp /build/appserver.ini /totvs12/protheus/bin/appserver/appserver.ini
 EXPOSE 9999
 EXPOSE 8080
 
-VOLUME ["/totvs12/protheus_data", "/totvs12/protheus/apo/", "/build"]
-# RUN sh /build/clean-my-init.sh
+VOLUME ["/totvs12/protheus_data", "/totvs12/protheus/apo"]
+
 WORKDIR /totvs12/protheus/bin/appserver
 
 ENTRYPOINT [ "/usr/bin/dumb-init", "--" ]
